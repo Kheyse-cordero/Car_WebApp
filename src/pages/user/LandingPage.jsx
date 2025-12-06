@@ -1,17 +1,104 @@
-import React from "react";
+import React, { useState } from "react";
 import PrimaryButton from "../../components/ui/primarybutton";
 import NavBar from "../../components/ui/navbar";
-import Card from "../../components/ui/card";
 
 const LandingPage = () => {
+  const [searchQuery, setSearchQuery] = useState("");
+  const [currentPage, setCurrentPage] = useState(1);
+  const carsPerPage = 6;
+
   const handleExplore = () => {
     // Navigate to car listing page
-    console.log("Navigate to car listing page");
+    window.location.href = "/listing";
   };
 
   const handleOrder = () => {
     // Navigate to order page
-    console.log("Navigate to order page");
+    window.location.href = "/order";
+  };
+
+  // Car data
+  const allCars = [
+    {
+      id: 1,
+      model: "Tesla Model S",
+      image: "https://images.pexels.com/photos/110844/pexels-photo-110844.jpeg?auto=compress&cs=tinysrgb&w=800",
+      price: "$79,990",
+      description: "Premium electric sedan with autopilot and long range"
+    },
+    {
+      id: 2,
+      model: "BMW M5",
+      image: "https://images.pexels.com/photos/244206/pexels-photo-244206.jpeg?auto=compress&cs=tinysrgb&w=800",
+      price: "$105,000",
+      description: "High-performance luxury sedan with twin-turbo V8"
+    },
+    {
+      id: 3,
+      model: "Porsche 911",
+      image: "https://images.pexels.com/photos/3802510/pexels-photo-3802510.jpeg?auto=compress&cs=tinysrgb&w=800",
+      price: "$115,000",
+      description: "Iconic sports car with rear-engine design"
+    },
+    {
+      id: 4,
+      model: "Mercedes-Benz G-Class",
+      image: "https://images.pexels.com/photos/1592384/pexels-photo-1592384.jpeg?auto=compress&cs=tinysrgb&w=800",
+      price: "$139,900",
+      description: "Legendary luxury SUV with off-road capability"
+    },
+    {
+      id: 5,
+      model: "Audi R8",
+      image: "https://images.pexels.com/photos/3802508/pexels-photo-3802508.jpeg?auto=compress&cs=tinysrgb&w=800",
+      price: "$158,600",
+      description: "Mid-engine supercar with V10 power"
+    },
+    {
+      id: 6,
+      model: "Range Rover Sport",
+      image: "https://images.pexels.com/photos/2920064/pexels-photo-2920064.jpeg?auto=compress&cs=tinysrgb&w=800",
+      price: "$83,000",
+      description: "Versatile luxury SUV with sporty performance"
+    },
+    {
+      id: 7,
+      model: "Honda Civic",
+      image: "https://images.pexels.com/photos/2519370/pexels-photo-2519370.jpeg?auto=compress&cs=tinysrgb&w=800",
+      price: "$28,500",
+      description: "Reliable compact sedan with excellent fuel economy"
+    },
+    {
+      id: 8,
+      model: "Ferrari F8",
+      image: "https://images.pexels.com/photos/3802506/pexels-photo-3802506.jpeg?auto=compress&cs=tinysrgb&w=800",
+      price: "$280,000",
+      description: "Italian supercar with breathtaking performance"
+    },
+    {
+      id: 9,
+      model: "Lamborghini Huracan",
+      image: "https://images.pexels.com/photos/3802509/pexels-photo-3802509.jpeg?auto=compress&cs=tinysrgb&w=800",
+      price: "$250,000",
+      description: "Exotic supercar with aggressive styling"
+    }
+  ];
+
+  // Filter cars based on search query
+  const filteredCars = allCars.filter(car =>
+    car.model.toLowerCase().includes(searchQuery.toLowerCase()) ||
+    car.description.toLowerCase().includes(searchQuery.toLowerCase())
+  );
+
+  // Pagination logic
+  const indexOfLastCar = currentPage * carsPerPage;
+  const indexOfFirstCar = indexOfLastCar - carsPerPage;
+  const currentCars = filteredCars.slice(indexOfFirstCar, indexOfLastCar);
+  const totalPages = Math.ceil(filteredCars.length / carsPerPage);
+
+  const handlePageChange = (pageNumber) => {
+    setCurrentPage(pageNumber);
+    window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
   return (
@@ -20,112 +107,129 @@ const LandingPage = () => {
       <NavBar />
 
       {/* Hero Section */}
-      <nav className="w-full flex justify-between items-center px-6 md:px-12 lg:px-20 xl:px-32 py-5 bg-white shadow-md sticky top-0 z-50">
-        <h1 className="text-3xl font-bold bg-gradient-to-r from-indigo-600 to-purple-600 bg-clip-text text-transparent">
-          MyBrand
-        </h1>
-        <div className="space-x-8 md:flex items-center">
-          <a href="#features" className="text-gray-700 hover:text-indigo-600 transition-colors font-medium">
-            Features
-          </a>
-          <a href="#about" className="text-gray-700 hover:text-indigo-600 transition-colors font-medium">
-            About
-          </a>
-          <a href="#contact" className="text-gray-700 hover:text-indigo-600 transition-colors font-medium">
-            Contact
-          </a>
-        </div>
-      </nav>
-
-      <PrimaryButton 
-        label="Get Started"
-        onClick={handleExplore}
-        type="primary"
-      />
-
-      {/* Hero Section */}
-      <section className="w-full flex flex-col md:flex-row items-center justify-between px-6 md:px-12 lg:px-20 xl:px-32 py-20 md:py-32 gap-12">
-        <div className="w-full md:w-1/2">
-          <h2 className="text-5xl md:text-6xl lg:text-7xl font-extrabold text-gray-900 mb-6 leading-tight">
-            Build Modern Web Apps with{" "}
-            <span className="bg-gradient-to-r from-indigo-600 to-purple-600 bg-clip-text text-transparent">
-              Ease
-            </span>
-          </h2>
-          <p className="text-gray-600 text-lg mb-8 leading-relaxed">
-            Create fast, responsive, and modern web applications using React and
-            Tailwind CSS. Get started in minutes with our flexible UI components
-            and streamlined workflow.
-          </p>
-          <PrimaryButton 
-            label="Order Now →"
-            onClick={handleOrder}
-            type="primary"
-          />
-        </div>
-
-        <div className="w-full md:w-1/2">
-          <img
-            src="https://images.pexels.com/photos/2014422/pexels-photo-2014422.jpeg?auto=compress&cs=tinysrgb&fit=crop&h=627&w=1200"
-            alt="Modern web design"
-            className="rounded-3xl shadow-2xl w-full hover:scale-105 transition-transform duration-500"
-          />
+      <section className="w-full bg-gradient-to-r from-indigo-600 via-purple-600 to-indigo-700 text-white text-center py-20 px-6">
+        <h1 className="text-5xl md:text-6xl font-bold mb-4">Premium Car Collection</h1>
+        <p className="text-xl text-indigo-100 mb-8">Discover luxury vehicles that match your style</p>
+        
+        {/* Search Bar */}
+        <div className="max-w-2xl mx-auto">
+          <div className="relative">
+            <input
+              type="text"
+              placeholder="Search by model or description..."
+              value={searchQuery}
+              onChange={(e) => {
+                setSearchQuery(e.target.value);
+                setCurrentPage(1);
+              }}
+              className="w-full px-6 py-4 rounded-full text-gray-900 text-lg focus:outline-none focus:ring-4 focus:ring-white/30 shadow-xl"
+            />
+            <svg
+              className="absolute right-6 top-1/2 transform -translate-y-1/2 w-6 h-6 text-gray-400"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth={2}
+                d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
+              />
+            </svg>
+          </div>
         </div>
       </section>
 
-      {/* Features Section */}
-      <section id="features" className="w-full py-24 bg-gradient-to-b from-white to-gray-50">
-        <div className="w-full px-6 md:px-12 lg:px-20 xl:px-32">
-          <div className="text-center mb-16">
-            <h3 className="text-4xl md:text-5xl font-bold text-gray-900 mb-4">
-              Why Choose Us
-            </h3>
-            <p className="text-gray-600 text-lg">
-              Powerful features designed to accelerate your development process
-            </p>
+      {/* Car Listing Grid */}
+      <section className="w-full px-6 md:px-12 lg:px-20 xl:px-32 py-16">
+        {currentCars.length === 0 ? (
+          <div className="text-center py-20">
+            <p className="text-2xl text-gray-600">No cars found matching your search.</p>
           </div>
+        ) : (
+          <>
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+              {currentCars.map((car) => (
+                <div
+                  key={car.id}
+                  className="bg-white rounded-2xl shadow-md hover:shadow-2xl transition-all duration-300 overflow-hidden group cursor-pointer"
+                >
+                  <div className="relative overflow-hidden">
+                    <img
+                      src={car.image}
+                      alt={car.model}
+                      className="w-full h-64 object-cover group-hover:scale-110 transition-transform duration-500"
+                    />
+                  </div>
+                  <div className="p-6">
+                    <h3 className="text-2xl font-bold text-gray-900 mb-2">{car.model}</h3>
+                    <p className="text-gray-600 mb-4 line-clamp-2">{car.description}</p>
+                    <div className="flex justify-between items-center">
+                      <span className="text-3xl font-bold bg-gradient-to-r from-indigo-600 to-purple-600 bg-clip-text text-transparent">
+                        {car.price}
+                      </span>
+                      <PrimaryButton
+                        label="View Details"
+                        onClick={() => console.log(`View ${car.model}`)}
+                        type="primary"
+                      />
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
 
-          <div className="w-full grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-            {/* Card 1 */}
-            <Card
-              icon="⚡"
-              title="Fast Performance"
-              description="Experience lightning-fast load times and optimized components that deliver seamless user experiences."
-              onClick={() => console.log("Card 1 clicked")}
-            />
-
-            {/* Card 2 */}
-            <Card
-              icon="📱"
-              title="Responsive Design"
-              description="Your website looks stunning on all devices, from mobile to desktop, with adaptive layouts."
-              onClick={() => console.log("Card 2 clicked")}
-            />
-
-            {/* Card 3 */}
-            <Card
-              icon="🎨"
-              title="Easy Customization"
-              description="Tailwind's utility-first classes make styling fast, flexible, and maintainable at scale."
-              onClick={() => console.log("Card 3 clicked")}
-            />
-          </div>
-        </div>
+            {/* Pagination */}
+            {totalPages > 1 && (
+              <div className="flex justify-center items-center gap-2 mt-12">
+                <button
+                  onClick={() => handlePageChange(currentPage - 1)}
+                  disabled={currentPage === 1}
+                  className="px-4 py-2 rounded-lg bg-white border border-gray-300 text-gray-700 hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed transition-all"
+                >
+                  Previous
+                </button>
+                
+                {[...Array(totalPages)].map((_, index) => (
+                  <button
+                    key={index + 1}
+                    onClick={() => handlePageChange(index + 1)}
+                    className={`px-4 py-2 rounded-lg transition-all ${
+                      currentPage === index + 1
+                        ? "bg-gradient-to-r from-indigo-600 to-purple-600 text-white shadow-lg"
+                        : "bg-white border border-gray-300 text-gray-700 hover:bg-gray-50"
+                    }`}
+                  >
+                    {index + 1}
+                  </button>
+                ))}
+                
+                <button
+                  onClick={() => handlePageChange(currentPage + 1)}
+                  disabled={currentPage === totalPages}
+                  className="px-4 py-2 rounded-lg bg-white border border-gray-300 text-gray-700 hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed transition-all"
+                >
+                  Next
+                </button>
+              </div>
+            )}
+          </>
+        )}
       </section>
 
       {/* CTA Section */}
       <section className="w-full bg-gradient-to-r from-indigo-600 via-purple-600 to-indigo-700 text-white text-center py-20 px-6 md:px-12">
         <div className="w-full">
           <h3 className="text-4xl md:text-5xl font-bold mb-6">
-            Ready to Launch Your Next Project?
+            Ready to Drive Your Dream Car?
           </h3>
           <p className="mb-10 text-lg text-indigo-100">
-            Join thousands of developers who trust our modern UI components to
-            build exceptional experiences.
+            Schedule a test drive today and experience luxury on the road.
           </p>
           <PrimaryButton 
-            label="Explore our Products"
-            onClick={handleExplore}
+            label="Order Now"
+            onClick={handleOrder}
             type="outline"
           />
         </div>
@@ -133,7 +237,7 @@ const LandingPage = () => {
 
       {/* Footer */}
       <footer className="w-full bg-gray-900 text-gray-400 text-center py-8">
-        <p className="text-sm">© 2025 Put your name here. All rights reserved.</p>
+        <p className="text-sm">© 2025 Premium Car Dealership. All rights reserved.</p>
       </footer>
     </div>
   );
